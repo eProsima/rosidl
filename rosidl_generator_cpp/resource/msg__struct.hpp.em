@@ -96,6 +96,7 @@ namespace @(ns)
 
 @[end for]@
 // raw message struct
+template<class ContainerAllocator>
 struct @(message.structure.namespaced_type.name)__raw_
 {
   // field types and members
@@ -109,7 +110,7 @@ struct @(message.structure.namespaced_type.name)__raw_
 // message struct
 template<class ContainerAllocator>
 struct @(message.structure.namespaced_type.name)_
-  : public @(message.structure.namespaced_type.name)__raw_
+  : public @(message.structure.namespaced_type.name)__raw_<ContainerAllocator>
 {
   using Type = @(message.structure.namespaced_type.name)_<ContainerAllocator>;
 
