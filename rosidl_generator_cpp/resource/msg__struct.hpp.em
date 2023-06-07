@@ -113,6 +113,12 @@ struct @(message.structure.namespaced_type.name)_
 {
   using Type = @(message.structure.namespaced_type.name)_<ContainerAllocator>;
 
+  template<typename... Args>
+  @(message.structure.namespaced_type.name)_(Args&&... args)
+    : @(message.structure.namespaced_type.name)__raw_(std::forward<Args>(args)...)
+  {
+  }
+
 @{
 # The creation of the constructors for messages is a bit complicated.  The goal
 # is to have a constructor where the user can control how the fields of the
