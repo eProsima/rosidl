@@ -95,9 +95,21 @@ namespace @(ns)
 {
 
 @[end for]@
+// raw message struct
+struct @(message.structure.namespaced_type.name)__raw_
+{
+  // field types and members
+@[for member in message.structure.members]@
+  using _@(member.name)_type =
+    @(msg_type_to_cpp(member.type));
+  _@(member.name)_type @(member.name);
+@[end for]@
+};
+
 // message struct
 template<class ContainerAllocator>
 struct @(message.structure.namespaced_type.name)_
+  : public @(message.structure.namespaced_type.name)__raw_
 {
   using Type = @(message.structure.namespaced_type.name)_<ContainerAllocator>;
 
@@ -243,13 +255,6 @@ non_defaulted_zero_initialized_members = [
     }
 @[end if]@
   }
-
-  // field types and members
-@[for member in message.structure.members]@
-  using _@(member.name)_type =
-    @(msg_type_to_cpp(member.type));
-  _@(member.name)_type @(member.name);
-@[end for]@
 
 @[if len(message.structure.members) != 1 or message.structure.members[0].name != EMPTY_STRUCTURE_REQUIRED_MEMBER_NAME]@
   // setters for named parameter idiom
