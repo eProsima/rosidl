@@ -4,6 +4,7 @@ from rosidl_generator_cpp import create_init_alloc_and_member_lists
 from rosidl_generator_cpp import escape_string
 from rosidl_generator_cpp import escape_wstring
 from rosidl_generator_cpp import msg_type_to_cpp
+from rosidl_generator_cpp import msg_type_to_cpp_raw
 from rosidl_generator_cpp import MSG_TYPE_TO_CPP
 from rosidl_parser.definition import AbstractNestedType
 from rosidl_parser.definition import AbstractString
@@ -95,6 +96,18 @@ namespace @(ns)
 {
 
 @[end for]@
+// raw message struct for initialization
+template<class ContainerAllocator>
+struct @(message.structure.namespaced_type.name)__raw_
+{
+  // field types and members
+@[for member in message.structure.members]@
+  using _@(member.name)_type =
+    @(msg_type_to_cpp_raw(member.type));
+  _@(member.name)_type @(member.name);
+@[end for]@
+};
+
 // message struct
 template<class ContainerAllocator>
 struct @(message.structure.namespaced_type.name)_
