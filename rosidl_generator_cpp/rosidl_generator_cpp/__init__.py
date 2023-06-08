@@ -330,13 +330,17 @@ def create_init_alloc_and_member_lists(message):
     #                initializion in the allocator constructor
     #   member_list - The list of members that we will generate initialization code
     #                 for in the body of the constructors
+    #   move_list - The list of members that we will generate move construction from raw initializer
+    #               in the body of the constructor
     init_list = []
     alloc_list = []
     member_list = []
+    move_list = []
     for field in message.structure.members:
         member = Member(field.name)
         member.type = field.type
         if isinstance(field.type, Array):
+            move_list.append('%s(std::move(_raw_init.%s))' % (field.name, field.name))
             alloc_list.append(field.name + '(_alloc)')
             if isinstance(field.type.value_type, BasicType) or \
                     isinstance(field.type.value_type, AbstractGenericString):
@@ -354,6 +358,7 @@ def create_init_alloc_and_member_lists(message):
                 member.zero_value = []
                 member.zero_need_array_override = True
         elif isinstance(field.type, AbstractSequence):
+            move_list.append('%s(std::move(_raw_init.%s))' % (field.name, field.name))
             if field.has_annotation('default'):
                 default_value = literal_eval(
                     field.get_annotation_value('default')['value'])
@@ -364,6 +369,10 @@ def create_init_alloc_and_member_lists(message):
                     isinstance(field.type, AbstractGenericString):
                 if isinstance(field.type, AbstractGenericString):
                     alloc_list.append(field.name + '(_alloc)')
+                    move_list.append('%s(std::move(_raw_init.%s))' % (field.name, field.name))
+                else:
+                    move_list.append('%s(_raw_init.%s)' % (field.name, field.name))
+                    
                 default = default_value_from_type(field.type)
                 member.zero_value = primitive_value_to_cpp(field.type, default)
                 if field.has_annotation('default'):
@@ -373,6 +382,7 @@ def create_init_alloc_and_member_lists(message):
             else:
                 init_list.append(field.name + '(_init)')
                 alloc_list.append(field.name + '(_alloc, _init)')
+                move_list.append('%s(std::move(_raw_init.%s))' % (field.name, field.name))
 
         if field.has_annotation('default') or member.zero_value is not None:
             if not member_list or not member_list[-1].add_member(member):
@@ -380,4 +390,4 @@ def create_init_alloc_and_member_lists(message):
                 commonset.add_member(member)
                 member_list.append(commonset)
 
-    return init_list, alloc_list, member_list
+    return init_list, alloc_list, member_list, move_list

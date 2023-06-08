@@ -120,7 +120,7 @@ struct @(message.structure.namespaced_type.name)_
 # message get initialized via the _init parameter to the constructor.  See
 # http://design.ros2.org/articles/generated_interfaces_cpp.html#constructors
 # for a detailed explanation of the different _init parameters.
-init_list, alloc_list, member_list = create_init_alloc_and_member_lists(message)
+init_list, alloc_list, member_list, move_list = create_init_alloc_and_member_lists(message)
 
 def generate_default_string(membset):
     from rosidl_generator_cpp import msg_type_only_to_cpp
@@ -255,6 +255,14 @@ non_defaulted_zero_initialized_members = [
 @[  end for]@
     }
 @[end if]@
+  }
+
+  explicit @(message.structure.namespaced_type.name)_(
+      @(message.structure.namespaced_type.name)__raw_<ContainerAllocator>&& _raw_init)
+@[if move_list]@
+  : @(',\n    '.join(move_list))
+@[end if]@
+  {
   }
 
   // field types and members
