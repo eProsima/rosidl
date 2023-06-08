@@ -75,7 +75,7 @@ MSG_TYPE_TO_CPP = {
 }
 
 
-def msg_type_only_to_cpp(type_):
+def msg_type_only_to_cpp_internal(type_, namespaced_type_suffix_):
     """
     Convert a message type into the C++ declaration, ignoring array types.
 
@@ -95,26 +95,35 @@ def msg_type_only_to_cpp(type_):
         cpp_type = MSG_TYPE_TO_CPP['wstring']
     elif isinstance(type_, NamespacedType):
         typename = '::'.join(type_.namespaced_name())
-        cpp_type = typename + '_<ContainerAllocator>'
+        cpp_type = typename + namespaced_type_suffix_
     else:
         assert False, type_
 
     return cpp_type
 
 
-def msg_type_to_cpp(type_):
+def msg_type_only_to_cpp(type_):
     """
-    Convert a message type into the C++ declaration, along with the array type.
+    Convert a message type into the C++ declaration, ignoring array types.
 
-    Example input: uint32, std_msgs/String, std_msgs/String[3]
-    Example output: uint32_t, std_msgs::String_<ContainerAllocator>,
-                    std::array<std_msgs::String_<ContainerAllocator>, 3>
+    Example input: uint32, std_msgs/String
+    Example output: uint32_t, std_msgs::String_<ContainerAllocator>
 
     @param type_: The message type
     @type type_: rosidl_parser.Type
     """
-    cpp_type = msg_type_only_to_cpp(type_)
+    return msg_type_only_to_cpp_internal(type_, '_<ContainerAllocator>')
 
+
+def msg_type_rebind(cpp_type, type_):
+    """
+    Translates sequence and array types cpp declarations into rosidl_runtime_cpp equivalents.
+
+    @param cpp_type: The cpp type name
+    @type cpp_type: string
+    @param type_: The message type
+    @type type_: rosidl_parser.Type
+    """
     if isinstance(type_, AbstractNestedType):
         if isinstance(type_, UnboundedSequence):
             return \
@@ -131,6 +140,36 @@ def msg_type_to_cpp(type_):
             return 'std::array<%s, %u>' % (cpp_type, type_.size)
     else:
         return cpp_type
+
+
+def msg_type_to_cpp(type_):
+    """
+    Convert a message type into the C++ declaration, along with the array type.
+
+    Example input: uint32, std_msgs/String, std_msgs/String[3]
+    Example output: uint32_t, std_msgs::String_<ContainerAllocator>,
+                    std::array<std_msgs::String_<ContainerAllocator>, 3>
+
+    @param type_: The message type
+    @type type_: rosidl_parser.Type
+    """
+    cpp_type = msg_type_only_to_cpp_internal(type_, '_<ContainerAllocator>')
+    return msg_type_rebind(cpp_type, type_)
+
+
+def msg_type_to_cpp_raw(type_):
+    """
+    Convert a message type into the C++ raw declaration, along with the array type.
+
+    Example input: uint32, std_msgs/String, std_msgs/String[3]
+    Example output: uint32_t, std_msgs::String_<ContainerAllocator>__raw_,
+                    std::array<std_msgs::String_<ContainerAllocator>__raw_, 3>
+
+    @param type_: The message type
+    @type type_: rosidl_parser.Type
+    """
+    cpp_type = msg_type_only_to_cpp_internal(type_, '__raw_<ContainerAllocator>')
+    return msg_type_rebind(cpp_type, type_)
 
 
 def value_to_cpp(type_, value):
