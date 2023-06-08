@@ -75,7 +75,7 @@ MSG_TYPE_TO_CPP = {
 }
 
 
-def msg_type_only_to_cpp_internal(type_, namespaced_type_suffix_):
+def msg_type_only_to_cpp_internal(type_, namespaced_type_format_):
     """
     Convert a message type into the C++ declaration, ignoring array types.
 
@@ -95,7 +95,7 @@ def msg_type_only_to_cpp_internal(type_, namespaced_type_suffix_):
         cpp_type = MSG_TYPE_TO_CPP['wstring']
     elif isinstance(type_, NamespacedType):
         typename = '::'.join(type_.namespaced_name())
-        cpp_type = typename + namespaced_type_suffix_
+        cpp_type = namespaced_type_format_ % typename
     else:
         assert False, type_
 
@@ -112,7 +112,7 @@ def msg_type_only_to_cpp(type_):
     @param type_: The message type
     @type type_: rosidl_parser.Type
     """
-    return msg_type_only_to_cpp_internal(type_, '_<ContainerAllocator>')
+    return msg_type_only_to_cpp_internal(type_, '%s_<ContainerAllocator>')
 
 
 def msg_type_rebind(cpp_type, type_):
@@ -153,7 +153,7 @@ def msg_type_to_cpp(type_):
     @param type_: The message type
     @type type_: rosidl_parser.Type
     """
-    cpp_type = msg_type_only_to_cpp_internal(type_, '_<ContainerAllocator>')
+    cpp_type = msg_type_only_to_cpp(type_)
     return msg_type_rebind(cpp_type, type_)
 
 
@@ -162,13 +162,13 @@ def msg_type_to_cpp_raw(type_):
     Convert a message type into the C++ raw declaration, along with the array type.
 
     Example input: uint32, std_msgs/String, std_msgs/String[3]
-    Example output: uint32_t, std_msgs::String_<ContainerAllocator>__raw_,
-                    std::array<std_msgs::String_<ContainerAllocator>__raw_, 3>
+    Example output: uint32_t, std_msgs::String_<ContainerAllocator>::_raw_Initializer_,
+                    std::array<std_msgs::String_<ContainerAllocator>::_raw_Initializer_, 3>
 
     @param type_: The message type
     @type type_: rosidl_parser.Type
     """
-    cpp_type = msg_type_only_to_cpp_internal(type_, '__raw_<ContainerAllocator>')
+    cpp_type = msg_type_only_to_cpp_internal(type_, 'typename %s_<ContainerAllocator>::_raw_Initializer_')
     return msg_type_rebind(cpp_type, type_)
 
 

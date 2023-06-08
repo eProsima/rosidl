@@ -96,23 +96,22 @@ namespace @(ns)
 {
 
 @[end for]@
-// raw message struct for initialization
-template<class ContainerAllocator>
-struct @(message.structure.namespaced_type.name)__raw_
-{
-  // field types and members
-@[for member in message.structure.members]@
-  using _@(member.name)_type =
-    @(msg_type_to_cpp_raw(member.type));
-  _@(member.name)_type @(member.name);
-@[end for]@
-};
-
 // message struct
 template<class ContainerAllocator>
 struct @(message.structure.namespaced_type.name)_
 {
   using Type = @(message.structure.namespaced_type.name)_<ContainerAllocator>;
+
+// raw message struct for initialization
+  struct _raw_Initializer_
+  {
+  // field types and members
+@[for member in message.structure.members]@
+    using _@(member.name)_type =
+      @(msg_type_to_cpp_raw(member.type));
+    _@(member.name)_type @(member.name);
+@[end for]@
+  };
 
 @{
 # The creation of the constructors for messages is a bit complicated.  The goal
@@ -258,7 +257,7 @@ non_defaulted_zero_initialized_members = [
   }
 
   explicit @(message.structure.namespaced_type.name)_(
-      @(message.structure.namespaced_type.name)__raw_<ContainerAllocator>&& _raw_init)
+      _raw_Initializer_&& _raw_init)
 @[if move_list]@
   : @(',\n    '.join(move_list))
 @[end if]@
