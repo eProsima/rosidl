@@ -39,8 +39,6 @@ typedef struct rosidl_typesupport_introspection_c__MessageMember_s
   /// If the type_id_ value is rosidl_typesupport_introspection_c__ROS_TYPE_MESSAGE,
   /// this points to an array describing the fields of the sub-interface.
   const rosidl_message_type_support_t * members_;
-  /// True if this field is a keyed field, false otherwise.
-  bool is_key_;
   /// True if this field is an array type, false if it is any other type. An
   /// array has the same value for / type_id_.
   bool is_array_;
@@ -98,6 +96,9 @@ typedef struct rosidl_typesupport_introspection_c__MessageMembers_s
   void (* init_function)(void *, enum rosidl_runtime_c__message_initialization);
   /// The function used to clean up the interface's in-memory representation
   void (* fini_function)(void *);
+  /// Array of the same size as the numebr of fields that indicates
+  /// whether a field is keyed or not
+  const bool * key_members_array_;
 } rosidl_typesupport_introspection_c__MessageMembers;
 
 #endif  // ROSIDL_TYPESUPPORT_INTROSPECTION_C__MESSAGE_INTROSPECTION_H_
