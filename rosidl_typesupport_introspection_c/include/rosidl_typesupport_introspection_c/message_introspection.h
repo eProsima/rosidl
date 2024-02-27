@@ -96,8 +96,7 @@ typedef struct rosidl_typesupport_introspection_c__MessageMembers_s
   void (* init_function)(void *, enum rosidl_runtime_c__message_initialization);
   /// The function used to clean up the interface's in-memory representation
   void (* fini_function)(void *);
-  /// Array of the same size as the numebr of fields that indicates
-  /// whether a field is keyed or not
+  /// A pointer to the array that indicates whether each field is annotated as @key
   const bool * key_members_array_;
 } rosidl_typesupport_introspection_c__MessageMembers;
 
