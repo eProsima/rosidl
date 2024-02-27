@@ -103,8 +103,7 @@ typedef struct ROSIDL_TYPESUPPORT_INTROSPECTION_CPP_PUBLIC MessageMembers_s
   void (* init_function)(void *, rosidl_runtime_cpp::MessageInitialization);
   /// The function used to clean up the interface's in-memory representation
   void (* fini_function)(void *);
-  /// Array of the same size as the numebr of fields that indicates
-  /// whether a field is keyed or not
+  /// A pointer to the array that indicates whether each field is annotated as @key
   const bool * key_members_array_;
 } MessageMembers;
 
