@@ -296,7 +296,7 @@ static const rosidl_typesupport_introspection_c__MessageMembers @(function_prefi
   @(function_prefix)__@(message.structure.namespaced_type.name)_message_member_array,  // message members
   @(function_prefix)__@(message.structure.namespaced_type.name)_init_function,  // function to initialize message memory (memory has to be allocated)
   @(function_prefix)__@(message.structure.namespaced_type.name)_fini_function,  // function to terminate message instance (will not free memory)
-  @(function_prefix)__@(message.structure.namespaced_type.name)_key_members_array // mapping to each field to know whether is keyed or not
+  @(function_prefix)__@(message.structure.namespaced_type.name)_key_members_array // mapping to each field to know whether it is keyed or not
 };
 
 // this is not const since it must be initialized on first access

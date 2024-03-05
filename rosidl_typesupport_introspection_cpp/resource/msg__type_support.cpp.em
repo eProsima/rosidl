@@ -262,7 +262,7 @@ static const ::rosidl_typesupport_introspection_cpp::MessageMembers @(message.st
   @(message.structure.namespaced_type.name)_message_member_array,  // message members
   @(message.structure.namespaced_type.name)_init_function,  // function to initialize message memory (memory has to be allocated)
   @(message.structure.namespaced_type.name)_fini_function,  // function to terminate message instance (will not free memory)
-  @(message.structure.namespaced_type.name)_key_members_array // mapping to each field to know whether is keyed or not
+  @(message.structure.namespaced_type.name)_key_members_array // mapping to each field to know whether it is keyed or not
 };
 
 static const rosidl_message_type_support_t @(message.structure.namespaced_type.name)_message_type_support_handle = {
