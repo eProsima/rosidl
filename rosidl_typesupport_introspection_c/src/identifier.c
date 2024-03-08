@@ -15,3 +15,4 @@
 #include "rosidl_typesupport_introspection_c/identifier.h"
 
 const char * rosidl_typesupport_introspection_c__identifier = "rosidl_typesupport_introspection_c";
+const char * rosidl_typesupport_introspection_c__identifier_v2 = "rosidl_typesupport_introspection_c_v2";

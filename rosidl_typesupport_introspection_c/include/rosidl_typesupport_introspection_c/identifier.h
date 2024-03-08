@@ -26,6 +26,10 @@ extern "C"
 ROSIDL_TYPESUPPORT_INTROSPECTION_C_PUBLIC
 extern const char * rosidl_typesupport_introspection_c__identifier;
 
+/// String identifying the typesupport introspection implementation in use.
+ROSIDL_TYPESUPPORT_INTROSPECTION_C_PUBLIC
+extern const char * rosidl_typesupport_introspection_c__identifier_v2;
+
 #ifdef __cplusplus
 }
 #endif
