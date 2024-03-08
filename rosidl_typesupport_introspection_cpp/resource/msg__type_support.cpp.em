@@ -162,6 +162,23 @@ void resize_function__@(message.structure.namespaced_type.name)__@(member.name)(
 @[    end if]@
 @[  end if]@
 @[end for]@
+
+static const bool @(message.structure.namespaced_type.name)_key_members_array[@(len(message.structure.members))] = {
+@{
+for index, member in enumerate(message.structure.members):
+  if member.has_annotation('key'):
+    if index < len(message.structure.members) - 1:
+        print('  true,')
+    else:
+        print('  true')
+  else:
+    if index < len(message.structure.members) - 1:
+        print('  false,')
+    else:
+        print('  false')
+}@
+};
+
 static const ::rosidl_typesupport_introspection_cpp::MessageMember @(message.structure.namespaced_type.name)_message_member_array[@(len(message.structure.members))] = {
 @{
 for index, member in enumerate(message.structure.members):
@@ -239,11 +256,12 @@ static const ::rosidl_typesupport_introspection_cpp::MessageMembers @(message.st
   sizeof(@('::'.join([package_name] + list(interface_path.parents[0].parts) + [message.structure.namespaced_type.name]))),
   @(message.structure.namespaced_type.name)_message_member_array,  // message members
   @(message.structure.namespaced_type.name)_init_function,  // function to initialize message memory (memory has to be allocated)
-  @(message.structure.namespaced_type.name)_fini_function  // function to terminate message instance (will not free memory)
+  @(message.structure.namespaced_type.name)_fini_function,  // function to terminate message instance (will not free memory)
+  @(message.structure.namespaced_type.name)_key_members_array // mapping to each field to know whether it is keyed or not
 };
 
 static const rosidl_message_type_support_t @(message.structure.namespaced_type.name)_message_type_support_handle = {
-  ::rosidl_typesupport_introspection_cpp::typesupport_identifier,
+  ::rosidl_typesupport_introspection_cpp::typesupport_identifier_v2,
   &@(message.structure.namespaced_type.name)_message_members,
   get_message_typesupport_handle_function,
 };
